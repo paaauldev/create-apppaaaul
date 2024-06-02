@@ -1,4 +1,4 @@
-# Create Appncy
+# Create AppPaaaul
 
 Create projects as Paaul would.
 Based on appcny
