@@ -1,7 +1,7 @@
 {
-  "name": "create-appncy",
+  "name": "create-apppaaaul",
   "version": "1.1.31",
-  "description": "Create projects as goncy would",
+  "description": "Create projects as paauldev would",
   "main": "index.mjs",
   "bin": {
     "create-appncy": "dist/index.js"
@@ -16,7 +16,7 @@
     "shadcn",
     "tailwindcss"
   ],
-  "author": "goncy",
+  "author": "paaauldev",
   "license": "ISC",
   "dependencies": {
     "glob": "^10.3.5",

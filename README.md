@@ -1,6 +1,7 @@
 # Create Appncy
 
-Create projects as Goncy would.
+Create projects as Paaul would.
+Based on appcny
 
 ## Usage
 
@@ -26,4 +27,3 @@ pnpm install -g create-appncy
 
 ## Questions?
 
-If you have any questions, feel free to open an issue or contact me on [X](https://x.com/goncy).
