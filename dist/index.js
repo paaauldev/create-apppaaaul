@@ -130,7 +130,7 @@ Check out ${import_picocolors.default.italic(
   }
   if (project.name !== ".") {
     try {
-      process.chdir(project.name);
+      await execAsync(`cd ${project.name}`);
       console.log(`
 ${import_picocolors.default.green(`cd`)} ${project.name}`);
       await execAsync("pnpm install");
