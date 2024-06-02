@@ -60,7 +60,7 @@ async function main() {
         type: "text",
         name: "name",
         message: "What is the name of your project?",
-        initial: initialName || "appncy-project",
+        initial: initialName || "apppaaaul-project",
         validate: (value) => {
           if (value !== "." && value.match(/[^a-zA-Z0-9-_]+/g)) {
             return "Project name can only contain letters, numbers, dashes, underscores, or be '.' for the current directory";
@@ -127,14 +127,6 @@ async function main() {
 
   // Log outro message
   console.log("\n✨ Project created ✨");
-  console.log(`\n${color.yellow(`Next steps:`)}\n`);
-
-  // Determine the next steps based on the destination
-  if (project.name !== ".") {
-    console.log(`${color.green(`cd`)} ${project.name}`);
-  }
-  console.log(`${color.green(`pnpm`)} install`);
-  console.log(`${color.green(`pnpm`)} dev`);
 
   // Extras log
   if (extras.length) {
@@ -148,8 +140,8 @@ async function main() {
   // Run commands if a new directory was created
   if (project.name !== ".") {
     try {
-      process.chdir(destination);
-      console.log(`\n${color.green(`cd`)} ${destination}`);
+      process.chdir(project.name);
+      console.log(`\n${color.green(`cd`)} ${project.name}`);
       await execAsync("pnpm install");
       await execAsync("pnpm dev");
     } catch (error) {

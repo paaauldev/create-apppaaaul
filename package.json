@@ -37,5 +37,13 @@
     "prettier": "^3.0.3",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paaauldev/create-apppaaaul.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paaauldev/create-apppaaaul/issues"
+  },
+  "homepage": "https://github.com/paaauldev/create-apppaaaul#readme"
 }
