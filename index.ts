@@ -140,7 +140,7 @@ async function main() {
   // Run commands if a new directory was created
   if (project.name !== ".") {
     try {
-      process.chdir(project.name);
+      await execAsync(`cd ${project.name}`)
       console.log(`\n${color.green(`cd`)} ${project.name}`);
       await execAsync("pnpm install");
       await execAsync("pnpm dev");
