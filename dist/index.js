@@ -76,7 +76,7 @@ async function main() {
         type: "text",
         name: "name",
         message: "What is the name of your project?",
-        initial: initialName || "appncy-project",
+        initial: initialName || "apppaaaul-project",
         validate: (value) => {
           if (value !== "." && value.match(/[^a-zA-Z0-9-_]+/g)) {
             return "Project name can only contain letters, numbers, dashes, underscores, or be '.' for the current directory";
@@ -120,14 +120,6 @@ async function main() {
     await (0, import_promises.writeFile)(file, draft, "utf8");
   }
   console.log("\n\u2728 Project created \u2728");
-  console.log(`
-${import_picocolors.default.yellow(`Next steps:`)}
-`);
-  if (project.name !== ".") {
-    console.log(`${import_picocolors.default.green(`cd`)} ${project.name}`);
-  }
-  console.log(`${import_picocolors.default.green(`pnpm`)} install`);
-  console.log(`${import_picocolors.default.green(`pnpm`)} dev`);
   if (extras.length) {
     console.log(
       `
@@ -138,9 +130,9 @@ Check out ${import_picocolors.default.italic(
   }
   if (project.name !== ".") {
     try {
-      process.chdir(destination);
+      process.chdir(project.name);
       console.log(`
-${import_picocolors.default.green(`cd`)} ${destination}`);
+${import_picocolors.default.green(`cd`)} ${project.name}`);
       await execAsync("pnpm install");
       await execAsync("pnpm dev");
     } catch (error) {
