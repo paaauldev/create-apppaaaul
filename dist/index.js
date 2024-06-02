@@ -35,56 +35,11 @@ var import_picocolors = __toESM(require("picocolors"));
 var import_prompts = __toESM(require("prompts"));
 var import_yargs = __toESM(require("yargs"));
 var import_helpers = require("yargs/helpers");
-var TEMPLATES = [
-  {
-    title: "Next.js + ESLint + TypeScript + Shadcn/ui",
-    value: "next-eslint-ts-shadcn"
-  },
-  {
-    title: "Next.js + ESLint + TypeScript + Tailwind",
-    value: "next-eslint-ts-tw"
-  },
-  {
-    title: "React (vite) + ESLint + TypeScript + Tailwind",
-    value: "react-eslint-ts-tw"
-  }
-];
+var import_child_process = require("child_process");
+var import_util = require("util");
+var execAsync = (0, import_util.promisify)(import_child_process.exec);
 var EXTRAS = {
   "next-eslint-ts-shadcn": [
-    {
-      title: "Mercado Pago",
-      value: "mercadopago"
-    },
-    {
-      title: "Kinde Auth",
-      value: "kinde"
-    },
-    {
-      title: "Clerk Auth",
-      value: "clerk"
-    },
-    {
-      title: "Auth0",
-      value: "auth0"
-    },
-    {
-      title: "Supabase",
-      value: "supabase"
-    },
-    {
-      title: "libSQL + Drizzle",
-      value: "libsql"
-    }
-  ],
-  "next-eslint-ts-tw": [
-    {
-      title: "Mercado Pago",
-      value: "mercadopago"
-    },
-    {
-      title: "Kinde Auth",
-      value: "kinde"
-    },
     {
       title: "Clerk Auth",
       value: "clerk"
@@ -108,17 +63,12 @@ var args = (0, import_yargs.default)((0, import_helpers.hideBin)(process.argv)).
     alias: "n",
     type: "string",
     description: "Name of the project"
-  },
-  template: {
-    alias: "t",
-    type: "string",
-    description: "Template to use"
   }
 });
 import_prompts.default.override(args.argv);
 async function main() {
   const {
-    _: [initialName, initialProject]
+    _: [initialName]
   } = await args.argv;
   const project = await (0, import_prompts.default)(
     [
@@ -128,17 +78,11 @@ async function main() {
         message: "What is the name of your project?",
         initial: initialName || "appncy-project",
         validate: (value) => {
-          if (value.match(/[^a-zA-Z0-9-_]+/g))
-            return "Project name can only contain letters, numbers, dashes and underscores";
+          if (value !== "." && value.match(/[^a-zA-Z0-9-_]+/g)) {
+            return "Project name can only contain letters, numbers, dashes, underscores, or be '.' for the current directory";
+          }
           return true;
         }
-      },
-      {
-        type: "select",
-        name: "template",
-        message: `Which template would you like to use?`,
-        initial: initialProject || 0,
-        choices: TEMPLATES
       }
     ],
     {
@@ -148,19 +92,20 @@ async function main() {
       }
     }
   );
+  const templateValue = "next-eslint-ts-shadcn";
   const template = import_node_path.default.join(
     import_node_path.default.dirname((0, import_node_url.fileURLToPath)(importMetaUrl)),
     "templates",
-    project.template
+    templateValue
   );
-  const destination = import_node_path.default.join(process.cwd(), project.name);
+  const destination = project.name === "." ? process.cwd() : import_node_path.default.join(process.cwd(), project.name);
   let extras = [];
-  if (EXTRAS[project.template]) {
+  if (EXTRAS[templateValue]) {
     const { extras: results } = await (0, import_prompts.default)({
       type: "multiselect",
       name: "extras",
       message: "Which extras would you like to add?",
-      choices: EXTRAS[project.template]
+      choices: EXTRAS[templateValue]
     });
     extras = results;
   }
@@ -178,7 +123,9 @@ async function main() {
   console.log(`
 ${import_picocolors.default.yellow(`Next steps:`)}
 `);
-  console.log(`${import_picocolors.default.green(`cd`)} ${project.name}`);
+  if (project.name !== ".") {
+    console.log(`${import_picocolors.default.green(`cd`)} ${project.name}`);
+  }
   console.log(`${import_picocolors.default.green(`pnpm`)} install`);
   console.log(`${import_picocolors.default.green(`pnpm`)} dev`);
   if (extras.length) {
@@ -188,6 +135,24 @@ Check out ${import_picocolors.default.italic(
         extras.map((extra) => `${extra.toUpperCase()}.md`).join(", ")
       )} for more info on how to use it.`
     );
+  }
+  if (project.name !== ".") {
+    try {
+      process.chdir(destination);
+      console.log(`
+${import_picocolors.default.green(`cd`)} ${destination}`);
+      await execAsync("pnpm install");
+      await execAsync("pnpm dev");
+    } catch (error) {
+      console.error(`Error executing commands: ${error}`);
+    }
+  } else {
+    try {
+      await execAsync("pnpm install");
+      await execAsync("pnpm dev");
+    } catch (error) {
+      console.error(`Error executing commands: ${error}`);
+    }
   }
   console.log("\n---\n");
   console.log(`Questions \u{1F440}? ${import_picocolors.default.underline(import_picocolors.default.cyan("https://x.com/goncy"))}`);
