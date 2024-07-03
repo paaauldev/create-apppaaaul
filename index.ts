@@ -3,13 +3,14 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cp, readFile, writeFile } from "node:fs/promises";
+import { exec } from "child_process";
+import { promisify } from "util";
+
 import { glob } from "glob";
 import color from "picocolors";
 import prompts from "prompts";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { exec } from "child_process";
-import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
@@ -65,6 +66,7 @@ async function main() {
           if (value !== "." && value.match(/[^a-zA-Z0-9-_]+/g)) {
             return "Project name can only contain letters, numbers, dashes, underscores, or be '.' for the current directory";
           }
+
           return true;
         },
       },
@@ -75,7 +77,7 @@ async function main() {
 
         process.exit(0);
       },
-    }
+    },
   );
 
   // Predefined template
@@ -85,7 +87,7 @@ async function main() {
   const template = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     "templates",
-    templateValue
+    templateValue,
   );
 
   // Get the destination folder for the project
@@ -132,33 +134,27 @@ async function main() {
   if (extras.length) {
     console.log(
       `\nCheck out ${color.italic(
-        extras.map((extra) => `${extra.toUpperCase()}.md`).join(", ")
-      )} for more info on how to use it.`
+        extras.map((extra) => `${extra.toUpperCase()}.md`).join(", "),
+      )} for more info on how to use it.`,
     );
   }
 
   // Run commands if a new directory was created
   if (project.name !== ".") {
     try {
-      await execAsync(`cd ${project.name}`)
+      await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
-      await execAsync("pnpm install");
-      await execAsync("pnpm dev");
-    } catch (error) {
-      console.error(`Error executing commands: ${error}`);
-    }
-  } else {
-    try {
-      await execAsync("pnpm install");
-      await execAsync("pnpm dev");
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
     }
   }
-
-  // Contact logs
-  console.log("\n---\n");
-  console.log(`Questions 👀? ${color.underline(color.cyan("https://x.com/goncy"))}`);
+  try {
+    console.log("Installing dependencies...");
+    await execAsync("pnpm install");
+    await execAsync("pnpm dev");
+  } catch (error) {
+    console.error(`Error executing commands: ${error}`);
+  }
 }
 
 // Run the main function
