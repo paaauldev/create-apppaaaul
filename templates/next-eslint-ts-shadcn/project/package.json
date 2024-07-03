@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "drizzle-kit push",
+    "db:studio": "pnpm drizzle-kit studio"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
