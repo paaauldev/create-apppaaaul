@@ -13,7 +13,7 @@ pnpm create apppaaaul
 ## Installation
 
 ```bash
-pnpm install -g create-appncy
+pnpm install -g create-apppaaaul
 ```
 
 ## Questions?
