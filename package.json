@@ -4,7 +4,7 @@
   "description": "Create projects as paauldev would",
   "main": "index.mjs",
   "bin": {
-    "create-appncy": "dist/index.js"
+    "create-apppaaaul": "dist/index.js"
   },
   "files": [
     "dist/**/*"
@@ -19,11 +19,8 @@
   "author": "paaauldev",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.31.2",
     "glob": "^10.3.5",
     "picocolors": "^1.0.0",
-    "postgres": "^3.4.4",
     "prompts": "^2.4.2",
     "yargs": "^17.7.2"
   },
