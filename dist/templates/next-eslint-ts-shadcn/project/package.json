@@ -41,6 +41,6 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "typescript": "^5.4.5",
-    "drizzle-kit": "^0.23.2"
+    "drizzle-kit": "^0.22.0"
   }
 }
