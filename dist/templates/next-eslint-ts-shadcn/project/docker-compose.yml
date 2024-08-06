@@ -2,7 +2,6 @@ services:
   paaauldev-db:
     image: postgres
     restart: always
-    # TODO: change container name to project name
     container_name: db
     ports:
       - 5432:5432
