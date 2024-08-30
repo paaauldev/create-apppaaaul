@@ -22,6 +22,10 @@ const TEMPLATES = [
     title: "Nextjs ts with db setup Landing",
     value: "nextjs-ts-landing",
   },
+  {
+    title: 'Nextjs ts clean',
+    value: 'nextjs-ts-clean'
+  }
 ];
 
 // Specify CLI arguments
