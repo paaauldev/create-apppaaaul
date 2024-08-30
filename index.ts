@@ -6,35 +6,23 @@ import { cp, readFile, writeFile } from "node:fs/promises";
 import { exec } from "child_process";
 import { promisify } from "util";
 
+import { cyan, green, red } from "picocolors";
 import { glob } from "glob";
 import color from "picocolors";
 import prompts from "prompts";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+import { install } from "./helpers/install";
 const execAsync = promisify(exec);
 
-// List of extras
-const EXTRAS = {
-  "next-eslint-ts-shadcn": [
-    {
-      title: "Clerk Auth",
-      value: "clerk",
-    },
-    {
-      title: "Auth0",
-      value: "auth0",
-    },
-    {
-      title: "Supabase",
-      value: "supabase",
-    },
-    {
-      title: "libSQL + Drizzle",
-      value: "libsql",
-    },
-  ],
-};
+// Define the templates available
+const TEMPLATES = [
+  {
+    title: "Nextjs ts with db setup Landing",
+    value: "nextjs-ts-landing",
+  },
+];
 
 // Specify CLI arguments
 const args = yargs(hideBin(process.argv)).options({
@@ -42,6 +30,11 @@ const args = yargs(hideBin(process.argv)).options({
     alias: "n",
     type: "string",
     description: "Name of the project",
+  },
+  template: {
+    alias: "t",
+    type: "string",
+    description: "Template to use",
   },
 });
 
@@ -51,7 +44,7 @@ prompts.override(args.argv);
 async function main() {
   // Get the initial values for the prompts
   const {
-    _: [initialName],
+    _: [initialName, initialProject],
   } = await args.argv;
 
   // Create the project prompt
@@ -70,6 +63,13 @@ async function main() {
           return true;
         },
       },
+      {
+        type: "select",
+        name: "template",
+        message: `Which template would you like to use?`,
+        initial: initialProject || 0,
+        choices: TEMPLATES,
+      },
     ],
     {
       onCancel: () => {
@@ -80,41 +80,18 @@ async function main() {
     },
   );
 
-  // Predefined template
-  const templateValue = "next-eslint-ts-shadcn";
-
   // Get the template folder for the selected template
   const template = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     "templates",
-    templateValue,
+    project.template,
   );
 
   // Get the destination folder for the project
   const destination = project.name === "." ? process.cwd() : path.join(process.cwd(), project.name);
 
-  // Get the extras for the selected template
-  let extras = [];
-
-  if (EXTRAS[templateValue]) {
-    const { extras: results } = await prompts({
-      type: "multiselect",
-      name: "extras",
-      message: "Which extras would you like to add?",
-      choices: EXTRAS[templateValue],
-    });
-
-    // Assign to variable
-    extras = results;
-  }
-
   // Copy files from the template folder to the current directory
   await cp(path.join(template, "project"), destination, { recursive: true });
-
-  for await (const extra of extras) {
-    // Copy files from the extra folder to the current directory
-    await cp(path.join(template, "extras", extra), destination, { recursive: true });
-  }
 
   // Get all files from the destination folder
   const files = await glob(`**/*`, { nodir: true, cwd: destination, absolute: true });
@@ -130,27 +107,24 @@ async function main() {
   // Log outro message
   console.log("\n✨ Project created ✨");
 
-  // Extras log
-  if (extras.length) {
-    console.log(
-      `\nCheck out ${color.italic(
-        extras.map((extra) => `${extra.toUpperCase()}.md`).join(", "),
-      )} for more info on how to use it.`,
-    );
-  }
-
   // Run commands if a new directory was created
   if (project.name !== ".") {
     try {
-      await execAsync(`cd ${project.name}`);
+      await execAsyc(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
     }
   }
   try {
-    console.log("Installing dependencies...");
-    await execAsync("pnpm install");
+    await execAsync("code .");
+    console.log("Installing packages. This might take a couple of minutes.");
+    console.log();
+    await install();
+    console.log();
+    console.log(`${green("Success!")} App installed successfully.`);
+    console.log(cyan("Initializing the development server..."));
+    //TODO: Add docker-compose up, docker create db, pnpm run db:push
     await execAsync("pnpm dev");
   } catch (error) {
     console.error(`Error executing commands: ${error}`);

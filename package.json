@@ -19,6 +19,7 @@
   "author": "paaauldev",
   "license": "ISC",
   "dependencies": {
+    "cross-spawn": "^7.0.3",
     "glob": "^10.3.5",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",

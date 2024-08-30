@@ -1,7 +1,7 @@
 # Create AppPaaaul
 
-Create projects as Paaul would.
-Based on appcny
+Create projects as Paauldev would.
+Based on [appcny](https://github.com/goncy/create-appncy)
 
 ## Usage
 
