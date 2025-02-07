@@ -112,7 +112,7 @@ export default [
             tabWidth: 2,
             semi: true,
             singleQuote: false,
-            bracketSpacing: false,
+            bracketSpacing: true,
             arrowParens: "always",
             endOfLine: "auto",
             plugins: ["prettier-plugin-tailwindcss"],
