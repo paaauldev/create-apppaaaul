@@ -121,7 +121,7 @@ async function main() {
     }
   }
   try {
-    await execAsync("code .");
+    await execAsync("cursor .");
     console.log("Installing packages. This might take a couple of minutes.");
     console.log();
     await install();
