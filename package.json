@@ -1,6 +1,6 @@
 {
   "name": "create-apppaaaul",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Create projects as paaauldev would",
   "main": "index.mjs",
   "bin": {
