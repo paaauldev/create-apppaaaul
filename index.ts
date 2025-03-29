@@ -19,8 +19,12 @@ const execAsync = promisify(exec);
 // Define the templates available
 const TEMPLATES = [
   {
-    title: "Nextjs ts with db setup Landing",
-    value: "nextjs-ts-landing",
+    title: "Nextjs ts with db setup Landing with prisma",
+    value: "nextjs-ts-landing-prisma",
+  },
+  {
+    title: "Nextjs ts with db setup Landing with drizzle",
+    value: "nextjs-ts-landing-drizzle",
   },
   {
     title: 'Nextjs ts clean',
