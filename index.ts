@@ -118,7 +118,7 @@ async function main() {
   // Run commands if a new directory was created
   if (project.name !== ".") {
     try {
-      await execAsyc(`cd ${project.name}`);
+      await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
