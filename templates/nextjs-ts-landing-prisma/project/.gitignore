@@ -37,3 +37,10 @@ next-env.d.ts
 
 # docker
 docker-compose.yml
+
+# prisma
+prisma/*
+
+# pnpm 
+pnpm-lock.yaml
+pnpm-*
