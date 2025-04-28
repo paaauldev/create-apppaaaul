@@ -39,7 +39,7 @@ next-env.d.ts
 docker-compose.yml
 
 # prisma
-prisma/*
+prisma/generated/*
 
 # pnpm 
 pnpm-lock.yaml
