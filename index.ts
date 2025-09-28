@@ -23,10 +23,6 @@ const TEMPLATES = [
     value: "nextjs-ts-landing-prisma",
   },
   {
-    title: "Nextjs ts with db setup Landing with drizzle",
-    value: "nextjs-ts-landing-drizzle",
-  },
-  {
     title: 'Nextjs ts clean',
     value: 'nextjs-ts-clean'
   }
