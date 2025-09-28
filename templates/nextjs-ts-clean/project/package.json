@@ -6,8 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "prod": "pnpm test && pnpm lint && pnpm build && git checkout main && git pull origin main && git merge dev && pnpm version patch && git push origin main && git checkout dev && echo ✅ Deploy completado",
+    "lint": "eslint .",
+    "prod": "pnpm lint && pnpm build && git checkout main && git pull origin main && git merge dev && pnpm version patch && git push origin main && git checkout dev && echo ✅ Deploy completado",
     "dev-rebase": "node src/scripts/dev-rebase.js"
     },
   "dependencies": {

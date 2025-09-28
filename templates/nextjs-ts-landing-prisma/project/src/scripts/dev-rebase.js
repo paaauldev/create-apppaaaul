@@ -20,12 +20,22 @@ try {
 
   if (isMerged) {
     run(`git branch -d ${branch}`);
-    console.log(`✅ Rama ${branch} rebaseada, mergeada en dev y eliminada`);
+    // Eliminar la rama del repositorio remoto si existe
+    try {
+      run(`git push origin --delete ${branch}`);
+      console.error(`✅ Rama ${branch} rebaseada, mergeada en dev y eliminada local y remotamente`);
+    } catch (remoteDeleteError) {
+      console.error(
+        `✅ Rama ${branch} rebaseada, mergeada en dev y eliminada localmente (no existía en remoto)`,
+      );
+    }
   } else {
-    console.log(
+    console.error(
       `⚠️ La rama ${branch} todavía no está completamente mergeada en dev, no se elimina.`,
     );
   }
+  run("git push origin dev");
+  run("git remote prune origin");
 } catch (err) {
   console.error("❌ Error en el proceso:", err.message);
   process.exit(1);
