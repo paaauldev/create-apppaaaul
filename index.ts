@@ -6,7 +6,7 @@ import { cp, readFile, writeFile } from "node:fs/promises";
 import { exec } from "child_process";
 import { promisify } from "util";
 
-import { cyan, green, red } from "picocolors";
+import { cyan, green, red, yellow } from "picocolors";
 import { glob } from "glob";
 import color from "picocolors";
 import prompts from "prompts";
@@ -97,6 +97,15 @@ async function main() {
   // Copy files from the template folder to the current directory
   await cp(path.join(template, "project"), destination, { recursive: true });
 
+  // Copy additional files from aditionals folder to the project root
+  const aditionalsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "aditionals");
+  try {
+    await cp(aditionalsPath, destination, { recursive: true });
+    console.log(`${color.green("✓")} Copied additional files`);
+  } catch (error) {
+    console.log(`${color.yellow("⚠")} Could not copy additional files: ${error}`);
+  }
+
   // Get all files from the destination folder
   const files = await glob(`**/*`, { nodir: true, cwd: destination, absolute: true });
 
@@ -116,8 +125,26 @@ async function main() {
     try {
       await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
-      await execAsync("git checkout -b dev");
-      await execAsync("git push -u origin dev");
+      
+      // Check if git is initialized
+      try {
+        await execAsync("git status", { cwd: destination });
+        console.log(`${color.green("✓")} Git repository detected`);
+        
+        // Create dev branch if git is initialized
+        await execAsync("git checkout -b dev", { cwd: destination });
+        console.log(`${color.green("✓")} Created dev branch`);
+        
+        // Try to push to origin if remote exists
+        try {
+          await execAsync("git push -u origin dev", { cwd: destination });
+          console.log(`${color.green("✓")} Pushed dev branch to origin`);
+        } catch (pushError) {
+          console.log(`${color.yellow("⚠")} Could not push to origin (remote may not be configured)`);
+        }
+      } catch (gitError) {
+        console.log(`${color.yellow("⚠")} Git not initialized in this directory`);
+      }
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
     }
