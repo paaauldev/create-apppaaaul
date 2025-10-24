@@ -97,23 +97,14 @@ async function main() {
   // Copy files from the template folder to the current directory
   await cp(path.join(template, "project"), destination, { recursive: true });
 
-  // Copy additional files from aditionals folder to the project root
-  const aditionalsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "aditionals");
+  // Copy additional files from aditionals folder within the template
   try {
-    // Check if aditionals folder exists
+    const aditionalsPath = path.join(template, "aditionals");
     await access(aditionalsPath);
     await cp(aditionalsPath, destination, { recursive: true });
     console.log(`${color.green("✓")} Copied additional files`);
   } catch (error) {
-    // Try alternative path for when running from pnpm cache
-    const alternativePath = path.join(process.cwd(), "aditionals");
-    try {
-      await access(alternativePath);
-      await cp(alternativePath, destination, { recursive: true });
-      console.log(`${color.green("✓")} Copied additional files from alternative path`);
-    } catch (altError) {
-      console.log(`${color.yellow("⚠")} Additional files folder not found, skipping...`);
-    }
+    console.log(`${color.yellow("⚠")} Additional files folder not found in template, skipping...`);
   }
 
   // Get all files from the destination folder
