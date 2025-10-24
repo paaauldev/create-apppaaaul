@@ -2,7 +2,7 @@
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { cp, readFile, writeFile, access } from "node:fs/promises";
+import { cp, readFile, writeFile, access, rename } from "node:fs/promises";
 import { exec } from "child_process";
 import { promisify } from "util";
 
@@ -101,7 +101,30 @@ async function main() {
   try {
     const aditionalsPath = path.join(template, "aditionals");
     await access(aditionalsPath);
-    await cp(aditionalsPath, destination, { recursive: true });
+    
+    // Get all files in aditionals folder
+    const aditionalsFiles = await glob(`**/*`, { 
+      cwd: aditionalsPath, 
+      absolute: true,
+      nodir: true 
+    });
+    
+    // Copy each file individually to handle dotfiles properly
+    for (const file of aditionalsFiles) {
+      const relativePath = path.relative(aditionalsPath, file);
+      const destPath = path.join(destination, relativePath);
+      
+      // Create destination directory if it doesn't exist
+      const destDir = path.dirname(destPath);
+      await execAsync(`mkdir -p "${destDir}"`).catch(() => {
+        // Fallback for Windows
+        return execAsync(`if not exist "${destDir}" mkdir "${destDir}"`);
+      });
+      
+      // Copy the file
+      await cp(file, destPath);
+    }
+    
     console.log(`${color.green("✓")} Copied additional files`);
   } catch (error) {
     console.log(`${color.yellow("⚠")} Additional files folder not found in template, skipping...`);
