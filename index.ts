@@ -102,29 +102,8 @@ async function main() {
     const aditionalsPath = path.join(template, "aditionals");
     await access(aditionalsPath);
     
-    // Get all files in aditionals folder
-    const aditionalsFiles = await glob(`**/*`, { 
-      cwd: aditionalsPath, 
-      absolute: true,
-      nodir: true 
-    });
-    
-    // Copy each file individually to handle dotfiles properly
-    for (const file of aditionalsFiles) {
-      const relativePath = path.relative(aditionalsPath, file);
-      const destPath = path.join(destination, relativePath);
-      
-      // Create destination directory if it doesn't exist
-      const destDir = path.dirname(destPath);
-      await execAsync(`mkdir -p "${destDir}"`).catch(() => {
-        // Fallback for Windows
-        return execAsync(`if not exist "${destDir}" mkdir "${destDir}"`);
-      });
-      
-      // Copy the file
-      await cp(file, destPath);
-    }
-    
+    // Use cp with recursive to copy all files including dotfiles
+    await cp(aditionalsPath, destination, { recursive: true });
     console.log(`${color.green("✓")} Copied additional files`);
   } catch (error) {
     console.log(`${color.yellow("⚠")} Additional files folder not found in template, skipping...`);
