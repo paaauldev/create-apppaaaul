@@ -116,6 +116,8 @@ async function main() {
     try {
       await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
+      await execAsync("git checkout -b dev");
+      await execAsync("git push -u origin dev");
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
     }
@@ -128,7 +130,6 @@ async function main() {
     console.log();
     console.log(`${green("Success!")} App installed successfully.`);
     console.log(cyan("Initializing the development server..."));
-    //TODO: Add docker-compose up, docker create db, pnpm run db:push
     await execAsync("pnpm dev");
   } catch (error) {
     console.error(`Error executing commands: ${error}`);
