@@ -150,7 +150,43 @@ async function main() {
       await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
       
-      // Check if git is initialized
+      // Check if user modified the suggested folder name
+    const suggestedFolderName = project.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const isDefaultFolder = destination.endsWith(suggestedFolderName);
+    
+    if (isDefaultFolder) {
+      // User didn't modify the folder name, assume git is already initialized
+      console.log(`${color.green("✓")} Using default folder name, assuming git repository is initialized`);
+      
+      // Add all files to git
+      await execAsync("git add .", { cwd: destination });
+      console.log(`${color.green("✓")} Files added to git`);
+      
+      // Make first commit
+      await execAsync('git commit -m "First commit"', { cwd: destination });
+      console.log(`${color.green("✓")} First commit created`);
+      
+      // Try to push to origin
+      try {
+        await execAsync("git push", { cwd: destination });
+        console.log(`${color.green("✓")} Pushed to origin`);
+      } catch (pushError) {
+        console.log(`${color.yellow("⚠")} Could not push to origin (remote may not be configured)`);
+      }
+      
+      // Create dev branch
+      await execAsync("git checkout -b dev", { cwd: destination });
+      console.log(`${color.green("✓")} Created dev branch`);
+      
+      // Try to push dev branch to origin
+      try {
+        await execAsync("git push -u origin dev", { cwd: destination });
+        console.log(`${color.green("✓")} Pushed dev branch to origin`);
+      } catch (pushError) {
+        console.log(`${color.yellow("⚠")} Could not push dev branch to origin`);
+      }
+    } else {
+      // User modified the folder name, check if git is initialized
       try {
         await execAsync("git status", { cwd: destination });
         console.log(`${color.green("✓")} Git repository detected`);
@@ -185,6 +221,7 @@ async function main() {
         await execAsync("git checkout -b dev", { cwd: destination });
         console.log(`${color.green("✓")} Created dev branch`);
       }
+    }
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
     }
