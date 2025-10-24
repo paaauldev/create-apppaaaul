@@ -51,14 +51,18 @@ async function main() {
     _: [initialName, initialProject],
   } = await args.argv;
 
+  // Get the current directory name as default project name
+  const currentDirName = path.basename(process.cwd());
+  const defaultProjectName = initialName || currentDirName;
+
   // Create the project prompt
   const project = await prompts(
     [
       {
         type: "text",
         name: "name",
-        message: "What is the name of your project?",
-        initial: initialName || "apppaaaul-project",
+        message: `What is the name of your project? (suggested: ${currentDirName})`,
+        initial: defaultProjectName,
         validate: (value) => {
           if (value !== "." && value.match(/[^a-zA-Z0-9-_]+/g)) {
             return "Project name can only contain letters, numbers, dashes, underscores, or be '.' for the current directory";
