@@ -96,7 +96,10 @@ async function main() {
   );
 
   // Get the destination folder for the project
-  const destination = project.name === "." ? process.cwd() : path.join(process.cwd(), project.name);
+  // If the user chose the same name as the current directory, use current directory
+  const destination = (project.name === "." || project.name === currentDirName) 
+    ? process.cwd() 
+    : path.join(process.cwd(), project.name);
 
   // Copy files from the template folder to the current directory
   await cp(path.join(template, "project"), destination, { recursive: true });
@@ -142,7 +145,7 @@ async function main() {
   console.log("\n✨ Project created ✨");
 
   // Run commands if a new directory was created
-  if (project.name !== ".") {
+  if (project.name !== "." && project.name !== currentDirName) {
     try {
       await execAsync(`cd ${project.name}`);
       console.log(`\n${color.green(`cd`)} ${project.name}`);
