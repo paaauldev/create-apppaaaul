@@ -3,15 +3,13 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP, admin } from "better-auth/plugins";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { env } from "./env";
 
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY!);
+const resend = new Resend(env.RESEND_API_KEY);
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: env.BETTER_AUTH_URL,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -21,8 +19,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
       prompt: "select_account",
     },
   },
