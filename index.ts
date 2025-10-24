@@ -196,8 +196,6 @@ async function main() {
     await install();
     console.log();
     console.log(`${green("Success!")} App installed successfully.`);
-    console.log(cyan("Initializing the development server..."));
-    await execAsync("pnpm dev");
   } catch (error) {
     console.error(`Error executing commands: ${error}`);
   }
