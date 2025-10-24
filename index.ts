@@ -167,7 +167,23 @@ async function main() {
           console.log(`${color.yellow("⚠")} Could not push to origin (remote may not be configured)`);
         }
       } catch (gitError) {
-        console.log(`${color.yellow("⚠")} Git not initialized in this directory`);
+        console.log(`${color.yellow("⚠")} Git not initialized, initializing git repository...`);
+        
+        // Initialize git repository
+        await execAsync("git init", { cwd: destination });
+        console.log(`${color.green("✓")} Git repository initialized`);
+        
+        // Add all files to git
+        await execAsync("git add .", { cwd: destination });
+        console.log(`${color.green("✓")} Files added to git`);
+        
+        // Make first commit
+        await execAsync('git commit -m "First commit"', { cwd: destination });
+        console.log(`${color.green("✓")} First commit created`);
+        
+        // Create dev branch
+        await execAsync("git checkout -b dev", { cwd: destination });
+        console.log(`${color.green("✓")} Created dev branch`);
       }
     } catch (error) {
       console.error(`Error executing commands: ${error}`);
