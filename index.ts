@@ -155,35 +155,60 @@ async function main() {
     const isDefaultFolder = destination.endsWith(suggestedFolderName);
     
     if (isDefaultFolder) {
-      // User didn't modify the folder name, assume git is already initialized
-      console.log(`${color.green("✓")} Using default folder name, assuming git repository is initialized`);
+      // User didn't modify the folder name, check if git is initialized
+      console.log(`${color.green("✓")} Using default folder name, checking git status...`);
       
-      // Add all files to git
-      await execAsync("git add .", { cwd: destination });
-      console.log(`${color.green("✓")} Files added to git`);
-      
-      // Make first commit
-      await execAsync('git commit -m "First commit"', { cwd: destination });
-      console.log(`${color.green("✓")} First commit created`);
-      
-      // Try to push to origin
       try {
-        await execAsync("git push", { cwd: destination });
-        console.log(`${color.green("✓")} Pushed to origin`);
-      } catch (pushError) {
-        console.log(`${color.yellow("⚠")} Could not push to origin (remote may not be configured)`);
-      }
-      
-      // Create dev branch
-      await execAsync("git checkout -b dev", { cwd: destination });
-      console.log(`${color.green("✓")} Created dev branch`);
-      
-      // Try to push dev branch to origin
-      try {
-        await execAsync("git push -u origin dev", { cwd: destination });
-        console.log(`${color.green("✓")} Pushed dev branch to origin`);
-      } catch (pushError) {
-        console.log(`${color.yellow("⚠")} Could not push dev branch to origin`);
+        // Check if git is already initialized
+        await execAsync("git status", { cwd: destination });
+        console.log(`${color.green("✓")} Git repository detected`);
+        
+        // Add all files to git
+        await execAsync("git add .", { cwd: destination });
+        console.log(`${color.green("✓")} Files added to git`);
+        
+        // Make first commit
+        await execAsync('git commit -m "First commit"', { cwd: destination });
+        console.log(`${color.green("✓")} First commit created`);
+        
+        // Try to push to origin
+        try {
+          await execAsync("git push", { cwd: destination });
+          console.log(`${color.green("✓")} Pushed to origin`);
+        } catch (pushError) {
+          console.log(`${color.yellow("⚠")} Could not push to origin (remote may not be configured)`);
+        }
+        
+        // Create dev branch
+        await execAsync("git checkout -b dev", { cwd: destination });
+        console.log(`${color.green("✓")} Created dev branch`);
+        
+        // Try to push dev branch to origin
+        try {
+          await execAsync("git push -u origin dev", { cwd: destination });
+          console.log(`${color.green("✓")} Pushed dev branch to origin`);
+        } catch (pushError) {
+          console.log(`${color.yellow("⚠")} Could not push dev branch to origin`);
+        }
+      } catch (gitError) {
+        // Git not initialized, initialize it
+        console.log(`${color.yellow("⚠")} Git not initialized, initializing git repository...`);
+        
+        // Initialize git repository
+        await execAsync("git init", { cwd: destination });
+        console.log(`${color.green("✓")} Git repository initialized`);
+        
+        // Add all files to git
+        await execAsync("git add .", { cwd: destination });
+        console.log(`${color.green("✓")} Files added to git`);
+        
+        // Make first commit
+        await execAsync('git commit -m "First commit"', { cwd: destination });
+        console.log(`${color.green("✓")} First commit created`);
+        
+        // Create dev branch
+        await execAsync("git checkout -b dev", { cwd: destination });
+        console.log(`${color.green("✓")} Created dev branch`);
       }
     } else {
       // User modified the folder name, check if git is initialized
