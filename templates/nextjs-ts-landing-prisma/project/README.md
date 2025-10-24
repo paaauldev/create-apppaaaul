@@ -1,15 +1,27 @@
-## Getting Started with {{name}}
+## ENV
+# DB prod
+#DATABASE_URL=""
 
-First, run the development server:
+# DB local
+DATABASE_URL="postgres://postgres:1234@localhost/postgres"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+# Better auth
+BETTER_AUTH_SECRET="" 
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+BETTER_AUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3000"
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Resend
+AUTH_RESEND_KEY=""
+RESEND_API_KEY=""
+RESEND_FROM_EMAIL="noreply@outreach.nuvace.com"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Cloudflare
+CLOUDFLARE_ACCESS_KEY=""
+CLOUDFLARE_BUCKET=""
+CLOUDFLARE_ENDPOINT=""
+CLOUDFLARE_SECRET_KEY=""
+CLOUDFLARE_TOKEN=""
+CLOUDFLARE_ACCOUNT_ID=""
+CLOUDFLARE_PUBLIC_URL=""
