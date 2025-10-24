@@ -2,7 +2,7 @@
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { cp, readFile, writeFile } from "node:fs/promises";
+import { cp, readFile, writeFile, access } from "node:fs/promises";
 import { exec } from "child_process";
 import { promisify } from "util";
 
@@ -100,10 +100,20 @@ async function main() {
   // Copy additional files from aditionals folder to the project root
   const aditionalsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "aditionals");
   try {
+    // Check if aditionals folder exists
+    await access(aditionalsPath);
     await cp(aditionalsPath, destination, { recursive: true });
     console.log(`${color.green("✓")} Copied additional files`);
   } catch (error) {
-    console.log(`${color.yellow("⚠")} Could not copy additional files: ${error}`);
+    // Try alternative path for when running from pnpm cache
+    const alternativePath = path.join(process.cwd(), "aditionals");
+    try {
+      await access(alternativePath);
+      await cp(alternativePath, destination, { recursive: true });
+      console.log(`${color.green("✓")} Copied additional files from alternative path`);
+    } catch (altError) {
+      console.log(`${color.yellow("⚠")} Additional files folder not found, skipping...`);
+    }
   }
 
   // Get all files from the destination folder
