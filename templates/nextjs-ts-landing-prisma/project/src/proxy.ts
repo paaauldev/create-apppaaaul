@@ -12,15 +12,16 @@ const publicRoutes = [
   "/politica-privacidad",
   "/terminos-condiciones",
   "/api/auth",
+  "/dashboard"
 ];
 
 // Rutas que requieren autenticación de usuario (role: user)
-const userRoutes = ["/dashboard"];
+const userRoutes = [""];
 
 // Rutas que requieren autenticación de admin (role: admin)
 const adminRoutes = ["/admin"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Verificar si la ruta es pública
@@ -59,7 +60,7 @@ export async function middleware(request: NextRequest) {
       }
     } catch (error) {
       // Si hay error obteniendo los datos del usuario, log detallado y permitir continuar
-      console.error("Error checking user status in middleware:", {
+      console.error("Error checking user status in proxy:", {
         error: error instanceof Error ? error.message : error,
         userId: session.user.id,
         pathname,
@@ -75,7 +76,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Verificar rutas de usuario
+  // Verificar rutas de usuario y dashboard
   const isUserRoute = userRoutes.some((route) => pathname.startsWith(route));
 
   if (isUserRoute && userRole !== "user" && userRole !== "admin") {
@@ -99,7 +100,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   runtime: "nodejs",
   matcher: [
-    // Aplicar middleware a todas las rutas excepto archivos estáticos
+    // Aplicar proxy a todas las rutas excepto archivos estáticos
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
