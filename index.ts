@@ -102,35 +102,25 @@ async function main() {
     const aditionalsPath = path.join(template, "aditionals");
     await access(aditionalsPath);
     
-    // Get all files including dotfiles using glob with dot option
-    const aditionalsFiles = await glob(`**/*`, { 
-      cwd: aditionalsPath, 
-      absolute: true,
-      dot: true,
-      nodir: true
-    });
+    // Use cp with recursive to copy all files including dotfiles
+    await cp(aditionalsPath, destination, { recursive: true });
     
-    // Copy each file individually
-    for (const file of aditionalsFiles) {
-      const relativePath = path.relative(aditionalsPath, file);
-      const destPath = path.join(destination, relativePath);
-      
-      // Ensure destination directory exists
-      const destDir = path.dirname(destPath);
-      try {
-        await execAsync(`mkdir -p "${destDir}"`);
-      } catch {
-        // Windows fallback
-        await execAsync(`if not exist "${destDir}" mkdir "${destDir}"`);
-      }
-      
-      // Copy the file
-      await cp(file, destPath);
-    }
-    
-    console.log(`${color.green("✓")} Copied additional files (${aditionalsFiles.length} files)`);
+    console.log(`${color.green("✓")} Copied additional files`);
   } catch (error) {
     console.log(`${color.yellow("⚠")} Additional files folder not found in template, skipping...`);
+  }
+
+  // Get all files from the destination folder
+  const aditionalsFiles = await glob(`**/*`, {nodir: true, cwd: destination, absolute: true});
+
+  // Rename files with %% prefix
+  for await (const file of aditionalsFiles) {
+    const basename = path.basename(file);
+
+    if (basename.startsWith("%%")) {
+      const newPath = path.join(path.dirname(file), basename.slice(2));
+      await rename(file, newPath);
+    }
   }
 
   // Get all files from the destination folder
