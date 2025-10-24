@@ -130,6 +130,9 @@ async function main() {
     }
   }
 
+  // Rename .env.test to .env
+  await rename(path.join(destination, ".env.test"), path.join(destination, ".env"));
+
   // Get all files from the destination folder
   const files = await glob(`**/*`, { nodir: true, cwd: destination, absolute: true });
 
