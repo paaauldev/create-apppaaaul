@@ -130,18 +130,27 @@ async function main() {
     }
   }
 
-  // Rename .env.test to .env
-  await rename(path.join(destination, ".env.test"), path.join(destination, ".env"));
+  // Rename .env.test to .env if it exists
+  try {
+    await rename(path.join(destination, ".env.test"), path.join(destination, ".env"));
+    console.log(`${color.green("✓")} Renamed .env.test to .env`);
+  } catch (error) {
+    console.log(`${color.yellow("⚠")} .env.test file not found, skipping rename...`);
+  }
 
   // Get all files from the destination folder
   const files = await glob(`**/*`, { nodir: true, cwd: destination, absolute: true });
 
   // Read each file and replace the tokens
   for await (const file of files) {
-    const data = await readFile(file, "utf8");
-    const draft = data.replace(/{{name}}/g, project.name);
+    try {
+      const data = await readFile(file, "utf8");
+      const draft = data.replace(/{{name}}/g, project.name);
 
-    await writeFile(file, draft, "utf8");
+      await writeFile(file, draft, "utf8");
+    } catch (error) {
+      console.log(`${color.yellow("⚠")} Could not process file: ${path.basename(file)}`);
+    }
   }
 
   // Log outro message
