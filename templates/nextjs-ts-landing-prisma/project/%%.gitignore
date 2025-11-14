@@ -44,3 +44,9 @@ prisma/generated/*
 # pnpm 
 pnpm-lock.yaml
 pnpm-*
+
+# sitemap and robots
+/public/sitemap.xml
+/public/robots.txt
+/public/sitemap-*.xml
+/public/robots-*.txt
