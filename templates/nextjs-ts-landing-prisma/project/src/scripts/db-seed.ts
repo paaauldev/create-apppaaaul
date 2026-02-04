@@ -1,7 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-
-
-const prisma = new PrismaClient();
+import { db } from "@/lib/db";
 
 async function main() {
     //Create database data
@@ -12,5 +9,5 @@ main().catch((error) => {
     console.error(error);
     process.exit(1);
 }).finally(async () => {
-    await prisma.$disconnect();
+    await db.$disconnect();
 });

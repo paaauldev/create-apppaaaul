@@ -1,22 +1,24 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP, admin } from "better-auth/plugins";
-import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 import { env } from "./env";
+import db from "./db";
 
-const prisma = new PrismaClient();
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
-  database: prismaAdapter(prisma, {
+  database: prismaAdapter(db, {
     provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
   },
+  experimental: {
+    joins: true,
+  }
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
