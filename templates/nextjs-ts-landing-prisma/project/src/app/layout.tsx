@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import "./globals.css";
-import { PlausibleProvider } from "next-plausible";
 
 export const metadata: Metadata = {
   title: "{{name}}",
@@ -13,23 +12,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-      <PlausibleProvider
-          selfHosted
-          taggedEvents
-          trackOutboundLinks
-          customDomain="https://plausible.nuvace.com"
-          domain="{{name}}.com"
-        />
-      </head>
       <body className="bg-background container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] px-4 font-sans antialiased">
-        <header className="text-xl font-bold leading-[4rem]">
-          <Link href="/">{{ name }}</Link>
-        </header>
         <main className="py-8">{children}</main>
-        <footer className="text-center leading-[4rem] opacity-70">
-          © {new Date().getFullYear()} {{ name }}
-        </footer>
       </body>
     </html>
   );
