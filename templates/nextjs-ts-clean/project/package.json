@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --fix",
-    "prod": "pnpm build && git checkout main && git pull origin main && git merge dev && pnpm version patch && git push origin main && git checkout dev && echo ✅ Deploy completado",
+    "prod": "pnpm build && git checkout main && git pull origin main && git merge dev && pnpm version patch && git push origin main && git checkout dev && git rebase main && echo ✅ Deploy completado",
     "dev-rebase": "node src/scripts/dev-rebase.js"
   },
   "dependencies": {
