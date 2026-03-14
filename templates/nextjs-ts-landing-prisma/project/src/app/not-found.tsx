@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Brain, Home, Search, ArrowLeft } from "lucide-react";
+import { IconBrain, IconHome, IconArrowLeft } from "@tabler/icons-react";
 import { motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export default function NotFound() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <div className="from-primary to-accent text-primary-foreground flex size-12 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg">
-            <Brain className="size-7" />
+            <IconBrain className="size-7" />
           </div>
           <span className="from-foreground to-primary bg-gradient-to-r bg-clip-text text-transparent">
          Nuvace
@@ -60,7 +60,7 @@ export default function NotFound() {
         <div className="flex w-full max-w-sm flex-col gap-4 sm:flex-row">
           <Button asChild className="flex-1 gap-2" size="lg">
             <Link href="/">
-              <Home className="size-4" />
+              <IconHome className="size-4" />
               Ir al inicio
             </Link>
           </Button>
@@ -72,7 +72,7 @@ export default function NotFound() {
           variant="ghost"
           onClick={() => window.history.back()}
         >
-          <ArrowLeft className="size-4" />
+          <IconArrowLeft className="size-4" />
           Volver atrás
         </Button>
 
