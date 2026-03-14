@@ -1,3 +1,0 @@
-module.exports=[52234,a=>{"use strict";var b=a.i(21702);function c({children:a}){return(0,b.jsx)("html",{lang:"en",children:(0,b.jsx)("body",{className:"bg-background container m-auto grid min-h-screen grid-rows-[auto,1fr,auto] px-4 font-sans antialiased",children:(0,b.jsx)("main",{className:"py-8",children:a})})})}a.s(["default",()=>c,"metadata",0,{title:"{{name}}",description:"A project by Paaauldev"}])}];
-
-//# sourceMappingURL=templates_nextjs-ts-landing-prisma_project_src_app_layout_tsx_bae95d14._.js.map
